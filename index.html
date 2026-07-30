@@ -1,270 +1,228 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lana Garcia</title>
-  <!-- Load Tailwind CSS Styling Engine Directly -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Load System Font Grid -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Lana Garcia is a UBC computer science student building thoughtful, people-first software.">
+  <meta name="theme-color" content="#78b9e8">
+  <meta property="og:title" content="Lana Garcia — software portfolio">
+  <meta property="og:description" content="Four projects, one morphing portrait, and a tiny platform game.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://captainthunderbird.github.io/lanagarcia./">
+  <title>Lana Garcia — Portfolio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    body { font-family: 'Space Grotesk', -apple-system, sans-serif; }
-    @keyframes marquee {
-      0% { transform: translateX(0%); }
-      100% { transform: translateX(-50%); }
-    }
-    .animate-marquee {
-      display: flex;
-      width: max-content;
-      animation: marquee 20s linear infinite;
-    }
-    /* Hide scrollbars but keep functionality */
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&family=Pixelify+Sans:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
 </head>
-<body class="bg-[#0b0b0c] text-[#f4f4f5] p-4 sm:p-8 min-h-screen flex items-center justify-center selection:bg-[#ff5a1f] selection:text-black">
+<body>
+  <a class="skip-link" href="#projects">Skip to projects</a>
 
-  <div class="w-full max-w-[1200px] flex flex-col gap-6">
-    
-    <!-- ===== HEADER & NAVIGATION ===== -->
-    <header class="flex justify-between items-center border border-[#27272a] bg-[#121214] rounded-2xl px-6 py-4">
-      <div class="font-bold text-xl tracking-tighter uppercase font-mono">
-        LANA GARCIA<span class="text-[#ff5a1f]">.</span>
-      </div>
-      <nav>
-        <a href="mailto:lanagarcia03@gmail.com" class="text-sm font-mono font-bold tracking-widest text-[#a1a1aa] hover:text-[#ff5a1f] transition-colors">
-          CONTACT
-        </a>
-      </nav>
-    </header>
+  <header class="site-header">
+    <a class="wordmark" href="#home" aria-label="Lana Garcia, home">Lana<span>★</span></a>
+    <nav aria-label="Main navigation">
+      <a href="#projects">Projects</a>
+      <a href="assets/Lana_Garcia_Resume.pdf" target="_blank" rel="noopener">Résumé</a>
+    </nav>
+    <button class="game-toggle" id="game-toggle" type="button" aria-pressed="false">
+      <span class="game-light"></span>
+      <span class="game-label">Game mode</span>
+    </button>
+  </header>
 
-    <!-- ===== VELOCITY CAROUSEL RUNWAY ===== -->
-    <div class="border border-[#27272a] bg-[#121214] rounded-xl py-3 overflow-hidden select-none relative">
-      <div class="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[#121214] to-transparent z-10 pointer-events-none"></div>
-      <div class="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-[#121214] to-transparent z-10 pointer-events-none"></div>
-      <div class="animate-marquee flex gap-12 text-sm font-mono uppercase tracking-widest text-[#71717a] font-bold">
-        <span>✦ JAVA ARCHITECTURE</span>
-        <span>✦ C++ INFRASTRUCTURE</span>
-        <span>✦ PYTHON ENGINE</span>
-        <span>✦ JAVASCRIPT LOGIC</span>
-        <span>✦ GEOSPATIAL DATA</span>
-        <span>✦ UI/UX FRAMEWORKS</span>
-        <!-- Mirror repeat loop -->
-        <span>✦ JAVA ARCHITECTURE</span>
-        <span>✦ C++ INFRASTRUCTURE</span>
-        <span>✦ PYTHON ENGINE</span>
-        <span>✦ JAVASCRIPT LOGIC</span>
-        <span>✦ GEOSPATIAL DATA</span>
-        <span>✦ UI/UX FRAMEWORKS</span>
+  <main>
+    <section class="intro" id="home">
+      <div class="portrait-wrap">
+        <canvas id="dot-portrait" width="520" height="560" aria-label="An animated dot portrait of Lana that changes shape">
+          Animated dot portrait of Lana Garcia.
+        </canvas>
+        <img id="portrait-source" src="assets/lana-portrait.jpg" alt="" hidden>
+        <div class="portrait-caption">
+          <span id="portrait-status">portrait / 01</span>
+          <button id="morph-button" type="button">Change shape ↻</button>
+        </div>
       </div>
+
+      <div class="intro-copy">
+        <p class="eyebrow">Hi, I’m</p>
+        <h1>Lana<br><span>Garcia.</span></h1>
+        <p>I’m a computer science student at UBC building social, data-driven, and community-focused software.</p>
+        <div class="intro-actions">
+          <a class="button button-primary" href="#projects">Explore my work ↓</a>
+          <a class="text-link" href="mailto:lanagarcia03@gmail.com">Say hello ↗</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="projects-section" id="projects" aria-labelledby="projects-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Selected work</p>
+          <h2 id="projects-title">Projects, visually.</h2>
+        </div>
+        <p>Choose a project to open its card. Every tab works.</p>
+      </div>
+
+      <div class="project-folder">
+        <div class="project-tabs" role="tablist" aria-label="Projects">
+          <button id="tab-forekast" role="tab" aria-selected="true" aria-controls="panel-forekast" tabindex="0" data-project-tab="forekast">Forekast</button>
+          <button id="tab-minidatadev" role="tab" aria-selected="false" aria-controls="panel-minidatadev" tabindex="-1" data-project-tab="minidatadev">MiniDataDev</button>
+          <button id="tab-scrawlnsprawl" role="tab" aria-selected="false" aria-controls="panel-scrawlnsprawl" tabindex="-1" data-project-tab="scrawlnsprawl">ScrawlNSprawl</button>
+          <button id="tab-kuseena" role="tab" aria-selected="false" aria-controls="panel-kuseena" tabindex="-1" data-project-tab="kuseena">Kuseena</button>
+        </div>
+
+        <div class="project-panel" id="panel-forekast" role="tabpanel" tabindex="0" aria-labelledby="tab-forekast" data-project-panel="forekast">
+          <div class="project-visual visual-forekast" aria-label="Stylized preview of the Forekast prediction dashboard">
+            <div class="mini-window">
+              <div class="window-bar" aria-hidden="true"><i></i><i></i><i></i><span>forekast.app</span></div>
+              <div class="forecast-ui">
+                <div class="forecast-nav"><b>FOREKAST</b><span>Feed</span><span>Topics</span><em>+ Forecast</em></div>
+                <div class="forecast-card">
+                  <div><small>TECHNOLOGY · CLOSES AUG 12</small><b>Will a new AI model top the benchmark this month?</b></div>
+                  <strong>68%</strong>
+                  <div class="forecast-meter"><i></i></div>
+                  <footer><span>YES 68</span><span>NO 32</span><span>24 comments</span></footer>
+                </div>
+                <div class="forecast-mini"><span></span><span></span><span></span></div>
+              </div>
+            </div>
+          </div>
+          <div class="project-copy">
+            <div class="project-number">01 / 04</div>
+            <p class="project-kicker">Social forecasting platform</p>
+            <h3>Forekast</h3>
+            <p>Users publish, discuss, and resolve testable predictions through personalized feeds, profiles, comments, and prediction-accuracy tracking.</p>
+            <ul><li>React</li><li>Express</li><li>PostgreSQL</li><li>Prisma</li></ul>
+            <a class="project-link" href="https://github.com/CaptainThunderbird/forekast" target="_blank" rel="noopener">View repository ↗</a>
+          </div>
+        </div>
+
+        <div class="project-panel" id="panel-minidatadev" role="tabpanel" tabindex="0" aria-labelledby="tab-minidatadev" data-project-panel="minidatadev" hidden>
+          <div class="project-visual visual-data" aria-label="Stylized preview of the MiniDataDev analysis dashboard">
+            <div class="mini-window">
+              <div class="window-bar" aria-hidden="true"><i></i><i></i><i></i><span>mini_data_dev.py</span></div>
+              <div class="data-ui">
+                <aside><b>MiniDataDev</b><span>Upload</span><span>Datasets</span><span class="selected">Explore</span><span>Ask AI</span></aside>
+                <div class="data-main">
+                  <div class="data-title"><b>Penguins</b><span>Ask your data ✦</span></div>
+                  <div class="data-chart" aria-hidden="true">
+                    <i style="--h:36%"></i><i style="--h:68%"></i><i style="--h:47%"></i><i style="--h:84%"></i><i style="--h:58%"></i><i style="--h:73%"></i>
+                  </div>
+                  <small>Average bill length by species</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="project-copy">
+            <div class="project-number">02 / 04</div>
+            <p class="project-kicker">Exploratory data analysis</p>
+            <h3>MiniDataDev</h3>
+            <p>An approachable data-analysis platform with four integrated datasets, modular uploads and live sources, plus an AI assistant for interpreting results.</p>
+            <ul><li>Python</li><li>Streamlit</li><li>OpenAI API</li></ul>
+            <a class="project-link" href="https://github.com/CaptainThunderbird/MiniDataDev" target="_blank" rel="noopener">View repository ↗</a>
+          </div>
+        </div>
+
+        <div class="project-panel" id="panel-scrawlnsprawl" role="tabpanel" tabindex="0" aria-labelledby="tab-scrawlnsprawl" data-project-panel="scrawlnsprawl" hidden>
+          <div class="project-visual visual-map" aria-label="Stylized preview of the ScrawlNSprawl community map">
+            <div class="mini-window">
+              <div class="window-bar" aria-hidden="true"><i></i><i></i><i></i><span>scrawl &amp; sprawl</span></div>
+              <div class="map-ui">
+                <div class="map-road road-one"></div>
+                <div class="map-road road-two"></div>
+                <div class="map-road road-three"></div>
+                <span class="map-water"></span>
+                <i class="map-pin pin-one">♥</i>
+                <i class="map-pin pin-two">♥</i>
+                <i class="map-pin pin-three">♥</i>
+                <div class="map-card"><b>Kindness spotted!</b><small>Someone left a note near Main Mall.</small></div>
+              </div>
+            </div>
+          </div>
+          <div class="project-copy">
+            <div class="project-number">03 / 04</div>
+            <p class="project-kicker">Real-time community map</p>
+            <h3>ScrawlNSprawl</h3>
+            <p>A location-based platform for leaving kind notes around a live map, with real-time Firestore updates and keyword filtering for safer posts.</p>
+            <ul><li>JavaScript</li><li>Firebase</li><li>Google Maps API</li></ul>
+            <a class="project-link" href="https://github.com/CaptainThunderbird/ScrawlNSprawl" target="_blank" rel="noopener">View repository ↗</a>
+          </div>
+        </div>
+
+        <div class="project-panel" id="panel-kuseena" role="tabpanel" tabindex="0" aria-labelledby="tab-kuseena" data-project-panel="kuseena" hidden>
+          <div class="project-visual visual-kuseena" aria-label="Stylized preview of the Kuseena recipe inventory app">
+            <div class="mini-window">
+              <div class="window-bar" aria-hidden="true"><i></i><i></i><i></i><span>Kuseena.java</span></div>
+              <div class="recipe-ui">
+                <aside><b>KUSEENA</b><span>⌂ Home</span><span class="selected">▤ Recipes</span><span>□ Pantry</span></aside>
+                <div class="recipe-main">
+                  <div class="recipe-title"><b>My recipes</b><span>+ Add</span></div>
+                  <div class="recipe-cards">
+                    <i><b>🍳</b><span>Breakfast</span></i>
+                    <i><b>🍜</b><span>Noodles</span></i>
+                    <i><b>🥭</b><span>Dessert</span></i>
+                  </div>
+                  <small>12 ingredients ready to use</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="project-copy">
+            <div class="project-number">04 / 04</div>
+            <p class="project-kicker">Local-first desktop app</p>
+            <h3>Kuseena</h3>
+            <p>A recipe and ingredient manager with input validation, exception handling, and local persistence that keeps pantry data consistent between sessions.</p>
+            <ul><li>Java</li><li>JUnit</li><li>Git</li></ul>
+            <a class="project-link" href="https://github.com/CaptainThunderbird/Kuseena" target="_blank" rel="noopener">View repository ↗</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="keyboard-section" id="keyboard" aria-labelledby="keyboard-title">
+      <div class="keyboard-heading">
+        <div>
+          <p class="eyebrow">One last thing</p>
+          <h2 id="keyboard-title">Play something.</h2>
+        </div>
+        <p>Click the keys or use <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> <kbd>F</kbd> <kbd>J</kbd> <kbd>K</kbd> <kbd>L</kbd> <kbd>;</kbd>.</p>
+      </div>
+
+      <div class="keyboard-shell">
+        <div class="keyboard-status" aria-live="polite">
+          <span class="equalizer" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span id="keyboard-status">Ready when you are</span>
+        </div>
+        <div class="keyboard-keys" role="group" aria-label="Musical keyboard">
+          <button class="music-key" type="button" data-note="261.63" data-key="a"><span>A</span><b>C4</b></button>
+          <button class="music-key" type="button" data-note="293.66" data-key="s"><span>S</span><b>D4</b></button>
+          <button class="music-key" type="button" data-note="329.63" data-key="d"><span>D</span><b>E4</b></button>
+          <button class="music-key" type="button" data-note="349.23" data-key="f"><span>F</span><b>F4</b></button>
+          <button class="music-key" type="button" data-note="392.00" data-key="j"><span>J</span><b>G4</b></button>
+          <button class="music-key" type="button" data-note="440.00" data-key="k"><span>K</span><b>A4</b></button>
+          <button class="music-key" type="button" data-note="493.88" data-key="l"><span>L</span><b>B4</b></button>
+          <button class="music-key" type="button" data-note="523.25" data-key=";"><span>;</span><b>C5</b></button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>Lana Garcia · 2026</span>
+    <div><a href="mailto:lanagarcia03@gmail.com">Email</a><a href="https://github.com/CaptainThunderbird" target="_blank" rel="noopener">GitHub</a><a href="https://www.linkedin.com/in/lana-garcia-a39166325/" target="_blank" rel="noopener">LinkedIn</a></div>
+  </footer>
+
+  <canvas id="game-canvas" aria-hidden="true"></canvas>
+  <div class="game-hud" id="game-hud" hidden>
+    <div class="game-score"><span class="score-light"></span><b id="game-score">0 / 4</b> stars</div>
+    <p id="game-message">Move with A/D or ←/→. Jump with W, ↑, or Space.</p>
+    <button id="game-reset" type="button">Restart level</button>
+    <div class="touch-controls" aria-label="Game controls">
+      <button type="button" data-game-control="left" aria-label="Move left">←</button>
+      <button type="button" data-game-control="jump" aria-label="Jump">↑</button>
+      <button type="button" data-game-control="right" aria-label="Move right">→</button>
     </div>
-
-    <!-- ===== BRUTALIST HERO DISPLAY PANEL ===== -->
-    <section class="border border-[#27272a] bg-[#121214] rounded-3xl p-6 sm:p-12 relative overflow-hidden">
-      <div class="absolute -top-40 -right-40 w-96 h-96 bg-[#ff5a1f] opacity-[0.06] blur-[120px] pointer-events-none"></div>
-      
-      <div class="max-w-[850px] relative z-10">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#27272a] bg-[#1c1c1f] text-sm font-mono text-[#ff5a1f] tracking-widest uppercase mb-6">
-          <span class="w-1.5 h-1.5 rounded-full bg-[#ff5a1f] animate-pulse"></span> STATUS: CORE ARCHITECTURE LIVE
-        </div>
-        
-        <h1 class="text-3xl sm:text-5xl md:text-6xl font-bold tracking-tighter uppercase leading-[0.95] mb-6">
-          COMPUTER SCIENCE AT UBC<span class="text-[#ff5a1f]">.</span> <br />
-          <span class="text-[#71717a]">BUILDING SYSTEMS TO BACK UP THE LONG GAME.</span>
-        </h1>
-        
-        <p class="text-base sm:text-lg text-[#a1a1aa] max-w-[650px] font-normal leading-relaxed mb-8">
-          Focused on scalable code architectures, clear layout metrics, and platform structure. Let the software speak for itself.
-        </p>
-
-        <div class="flex flex-wrap gap-4">
-          <a href="https://github.com/CaptainThunderbird" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-2 bg-[#ff5a1f] hover:bg-[#e04e19] text-black font-bold uppercase text-xs tracking-wider px-6 py-3.5 rounded-xl transition-all font-mono">
-            GITHUB <span class="inline-block transition-transform group-hover:translate-x-1 group-hover:-translate-y-1">↗</span>
-          </a>
-          <a href="https://www.linkedin.com/in/lanagarcia" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-2 border border-[#27272a] bg-[#1c1c1f] hover:bg-[#27272a] text-[#f4f4f5] font-bold uppercase text-xs tracking-wider px-6 py-3.5 rounded-xl transition-all font-mono">
-            LINKEDIN <span class="inline-block transition-transform group-hover:translate-x-1 group-hover:-translate-y-1">↗</span>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== INTERACTIVE SANDBOX ZONE ===== -->
-    <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      
-      <!-- MODULE A: COMPACT TOP SECRET HOVER RESUME PREVIEW -->
-      <div class="border border-[#27272a] bg-[#121214] rounded-3xl p-5 flex flex-col justify-between md:col-span-1 min-h-[220px] max-h-[260px] relative overflow-hidden group select-none">
-        
-        <!-- Document Content Layer -->
-        <div class="w-full h-full flex flex-col justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none group-hover:pointer-events-auto">
-          <!-- Mini Document Header -->
-          <div class="border-b border-[#27272a] pb-1.5 mb-1.5">
-            <div class="font-mono text-xs text-[#71717a] tracking-widest uppercase">MODULE / RESUME_PREVIEW</div>
-            <h4 class="text-sm font-bold uppercase tracking-tight text-[#ff5a1f]">LANA_G_2026.PDF</h4>
-          </div>
-
-          <!-- Document Preview Content Layer -->
-          <div class="flex-1 overflow-y-auto pr-1 text-xs font-mono text-[#a1a1aa] space-y-2 no-scrollbar mb-2">
-            <div class="text-center border-b border-dashed border-[#27272a] pb-1.5">
-              <p class="text-[#f4f4f5] font-bold text-sm uppercase tracking-tight">Lana Garcia</p>
-              <p class="text-[10px] text-[#71717a]">lanagarcia03@gmail.com | Vancouver, Canada</p>
-            </div>
-            
-            <div>
-              <p class="text-[#f4f4f5] font-bold uppercase text-[10px] border-b border-[#27272a] mb-0.5">EDUCATION</p>
-              <p class="text-white font-medium">University of British Columbia</p>
-              <p class="text-[10px] text-[#71717a]">B.Sc. in Computer Science (2025 - 2029)</p>
-            </div>
-
-            <div>
-              <p class="text-[#f4f4f5] font-bold uppercase text-[10px] border-b border-[#27272a] mb-0.5">EXPERIENCE</p>
-              <p class="text-white font-medium">• P&G Girls in STEM Competition</p>
-              <p class="text-white font-medium">• Malayan National Coding Competition</p>
-            </div>
-          </div>
-
-          <!-- Action Button Footbar Tray -->
-          <a href="Lana_Garcia_Resume_2026.pdf" download="Lana_Garcia_Resume_2026.pdf" class="w-full bg-[#1c1c1f] hover:bg-[#ff5a1f] text-[#a1a1aa] hover:text-black border border-[#27272a] font-mono text-center text-xs font-bold py-1.5 rounded-lg transition-all flex items-center justify-center gap-1 z-30">
-            <span>💾</span> DOWNLOAD RESUME.PDF
-          </a>
-        </div>
-
-        <!-- Smaller Box, Bigger Text TOP SECRET Cover Panel -->
-        <div class="absolute inset-0 bg-[#1a1a1c] border border-[#ff5a1f]/10 rounded-3xl flex flex-col items-center justify-center gap-1 transition-transform duration-500 ease-in-out transform group-hover:-translate-x-full z-20 pointer-events-auto">
-          <div class="w-2 h-2 bg-[#ff5a1f] rounded-full animate-pulse absolute top-4 right-4"></div>
-          <div class="flex items-center gap-1.5 bg-[#ff5a1f]/10 px-3 py-1 rounded-md border border-[#ff5a1f]/20 max-w-max">
-            <span class="text-sm">📂</span>
-            <span class="font-mono text-sm font-bold tracking-wider text-[#ff5a1f] uppercase">
-              TOP SECRET
-            </span>
-          </div>
-          <span class="font-mono text-[10px] text-[#71717a] uppercase tracking-wider">
-            [ HOVER TO DECRYPT ]
-          </span>
-        </div>
-
-      </div>
-
-      <!-- MODULE B: RETRO SYNTH AUDIO TRACK -->
-      <div class="border border-[#27272a] bg-[#121214] rounded-3xl p-5 flex flex-col justify-between md:col-span-2 min-h-[220px] max-h-[260px]">
-        <div>
-          <div class="font-mono text-xs text-[#71717a] tracking-widest uppercase mb-1">MODULE / CHIPTUNE_AUDIO_SYNTH_BAR</div>
-          <h4 class="text-base font-bold uppercase tracking-tight text-[#f4f4f5]">RETRO AUDIO BOARD</h4>
-          <p class="text-xs text-[#a1a1aa] mt-1">
-            Click keys below to play audio in your browser.
-          </p>
-        </div>
-
-        <!-- Shrunk Box Container with Massive Keys -->
-        <div class="grid grid-cols-8 gap-1 bg-[#0b0b0c] p-1.5 rounded-xl border border-[#27272a] w-full mt-4">
-          <button onclick="playTone(261.63)" class="h-24 rounded-lg bg-[#f4f4f5] text-[#0b0b0c] font-mono text-base font-bold tracking-tight flex flex-col justify-end pb-3 items-center hover:bg-[#ff5a1f] active:scale-95 transition-all select-none w-full">C4</button>
-          <button onclick="playTone(293.66)" class="h-24 rounded-lg bg-[#f4f4f5] text-[#0b0b0c] font-mono text-base font-bold tracking-tight flex flex-col justify-end pb-3 items-center hover:bg-[#ff5a1f] active:scale-95 transition-all select-none w-full">D4</button>
-          <button onclick="playTone(329.63)" class="h-24 rounded-lg bg-[#f4f4f5] text-[#0b0b0c] font-mono text-base font-bold tracking-tight flex flex-col justify-end pb-3 items-center hover:bg-[#ff5a1f] active:scale-95 transition-all select-none w-full">E4</button>
-          <button onclick="playTone(349.23)" class="h-24 rounded-lg bg-[#f4f4f5] text-[#0b0b0c] font-mono text-base font-bold tracking-tight flex flex-col justify-end pb-3 items-center hover:bg-[#ff5a1f] active:scale-95 transition-all select-none w-full">F4</button>
-          <button onclick="playTone(392.00)" class="h-24 rounded-lg bg-[#f4f4f5] text-[#0b0b0c] font-mono text-base font-bold tracking-tight flex flex-col justify-end pb-3 items-center hover:bg-[#ff5a1f] active:scale-95 transition-all select-none w-full">G4</button>
-          <button onclick="playTone(440.00)" class="h-24 rounded-lg bg-[#f4f4f5] text-[#0b0b0c] font-mono text-base font-bold tracking-tight flex flex-col justify-end pb-3 items-center hover:bg-[#ff5a1f] active:scale-95 transition-all select-none w-full">A4</button>
-          <button onclick="playTone(493.88)" class="h-24 rounded-lg bg-[#f4f4f5] text-[#0b0b0c] font-mono text-base font-bold tracking-tight flex flex-col justify-end pb-3 items-center hover:bg-[#ff5a1f] active:scale-95 transition-all select-none w-full">B4</button>
-          <button onclick="playTone(523.25)" class="h-24 rounded-lg bg-[#f4f4f5] text-[#0b0b0c] font-mono text-base font-bold tracking-tight flex flex-col justify-end pb-3 items-center hover:bg-[#ff5a1f] active:scale-95 transition-all select-none w-full">C5</button>
-        </div>
-      </div>
-
-    </section>
-
-    <!-- ===== WORK SAMPLES GRID ===== -->
-    <main class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-      <!-- CARD 1: SCRAWL N SPRAWL -->
-      <article class="border border-[#27272a] bg-[#121214] rounded-3xl p-6 sm:p-8 flex flex-col justify-between group hover:border-[#ff5a1f]/40 transition-colors duration-300">
-        <div>
-          <div class="flex justify-between items-start mb-6">
-            <span class="font-mono text-xs text-[#71717a] tracking-widest uppercase">01 / GEOSPATIAL</span>
-            <span class="text-[#71717a] font-mono text-xs">VANILLA JS</span>
-          </div>
-          <h3 class="text-2xl sm:text-3xl font-bold tracking-tighter uppercase mb-3 text-[#f4f4f5] group-hover:text-[#ff5a1f] transition-colors">
-            SCRAWL N SPRAWL
-          </h3>
-          <p class="text-sm sm:text-base text-[#a1a1aa] leading-relaxed max-w-[450px]">
-            A location-based campus kindness mapping system tracking regional community interactions and micro-deployments across geographical coordinates.
-          </p>
-        </div>
-        
-        <div class="mt-8">
-          <div class="flex flex-wrap gap-2 mb-6">
-            <span class="font-mono text-[10px] uppercase tracking-wider px-2.5 py-1 bg-[#1c1c1f] border border-[#27272a] text-[#a1a1aa] rounded-md">Vanilla JS</span>
-            <span class="font-mono text-[10px] uppercase tracking-wider px-2.5 py-1 bg-[#1c1c1f] border border-[#27272a] text-[#a1a1aa] rounded-md">Firebase</span>
-            <span class="font-mono text-[10px] uppercase tracking-wider px-2.5 py-1 bg-[#1c1c1f] border border-[#27272a] text-[#a1a1aa] rounded-md">Google Maps API</span>
-          </div>
-          <a href="https://github.com/CaptainThunderbird" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-wider font-bold border-b-2 border-[#27272a] hover:border-[#ff5a1f] pb-0.5 transition-colors text-[#f4f4f5]">
-            VIEW CODEBASE ↗
-          </a>
-        </div>
-      </article>
-
-      <!-- CARD 2: KUSEENA -->
-      <article class="border border-[#27272a] bg-[#121214] rounded-3xl p-6 sm:p-8 flex flex-col justify-between group hover:border-[#ff5a1f]/40 transition-colors duration-300">
-        <div>
-          <div class="flex justify-between items-start mb-6">
-            <span class="font-mono text-xs text-[#71717a] tracking-widest uppercase">02 / ARCHITECTURE</span>
-            <span class="text-[#71717a] font-mono text-xs">JAVA</span>
-          </div>
-          <h3 class="text-2xl sm:text-3xl font-bold tracking-tighter uppercase mb-3 text-[#f4f4f5] group-hover:text-[#ff5a1f] transition-colors">
-            KUSEENA INVENTORY
-          </h3>
-          <p class="text-sm sm:text-base text-[#a1a1aa] leading-relaxed max-w-[450px]">
-            A desktop inventory system built using rigid object-oriented architectures to handle recipe asset states and complex ingredient structural dependencies.
-          </p>
-        </div>
-        
-        <div class="mt-8">
-          <div class="flex flex-wrap gap-2 mb-6">
-            <span class="font-mono text-[10px] uppercase tracking-wider px-2.5 py-1 bg-[#1c1c1f] border border-[#27272a] text-[#a1a1aa] rounded-md">Java Core</span>
-            <span class="font-mono text-[10px] uppercase tracking-wider px-2.5 py-1 bg-[#1c1c1f] border border-[#27272a] text-[#a1a1aa] rounded-md">JUnit</span>
-            <span class="font-mono text-[10px] uppercase tracking-wider px-2.5 py-1 bg-[#1c1c1f] border border-[#27272a] text-[#a1a1aa] rounded-md">Git</span>
-          </div>
-          <a href="https://github.com/CaptainThunderbird" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-wider font-bold border-b-2 border-[#27272a] hover:border-[#ff5a1f] pb-0.5 transition-colors text-[#f4f4f5]">
-            VIEW CODEBASE ↗
-          </a>
-        </div>
-      </article>
-
-    </main>
-
-    <!-- ===== SYSTEM FOOTER MAPPING ===== -->
-    <footer class="border border-[#27272a] bg-[#121214] rounded-2xl px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left font-mono text-xs text-[#71717a]">
-      <div>LANA GARCIA &copy; 2026</div>
-      <div class="uppercase tracking-widest text-[#ff5a1f]">LESS TALKING. MORE BUILDING.</div>
-    </footer>
-
   </div>
-
-  <!-- Native Chiptune Oscillator Web Engine -->
-  <script>
-    function playTone(frequency) {
-      try {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContext) return;
-        const ctx = new AudioContext();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        
-        osc.type = 'triangle';
-        osc.frequency.value = frequency;
-        
-        gain.gain.setValueAtTime(0.15, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
-        
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        
-        osc.start();
-        osc.stop(ctx.currentTime + 0.4);
-      } catch (e) {
-        console.log("Audio context initialized.");
-      }
-    }
-  </script>
 </body>
 </html>
