@@ -34,12 +34,18 @@
   <main>
     <section class="intro" id="home">
       <div class="portrait-wrap">
-        <canvas id="dot-portrait" width="520" height="560" aria-label="An animated dot portrait of Lana that changes shape">
-          Animated dot portrait of Lana Garcia.
-        </canvas>
+        <div class="portrait-stage" id="portrait-stage">
+          <canvas id="dot-portrait" width="520" height="560" aria-label="An animated dot portrait of Lana that changes shape">
+            Animated dot portrait of Lana Garcia.
+          </canvas>
+          <img class="portrait-photo" src="Lana.jpg" alt="Lana Garcia smiling and holding up a peace sign">
+        </div>
         <div class="portrait-caption">
           <span id="portrait-status">portrait / 01</span>
-          <button id="morph-button" type="button">Change shape ↻</button>
+          <div class="portrait-controls">
+            <button id="portrait-view-toggle" type="button" aria-pressed="false">Show photo</button>
+            <button id="morph-button" type="button">Change shape ↻</button>
+          </div>
         </div>
       </div>
 
