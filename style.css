@@ -75,6 +75,36 @@ button { color: inherit; font: inherit; }
 }
 .wordmark span { color: var(--pink-dark); font-size: .8em; }
 
+.balloon-nav-wordmark {
+  flex: 0 0 auto;
+  gap: 3px;
+  height: 32px;
+}
+
+.balloon-nav-wordmark img {
+  display: block;
+  width: auto;
+  height: 100%;
+  filter: drop-shadow(1.5px 2px 0 var(--ink));
+  transition: transform .16s ease;
+}
+
+.balloon-nav-wordmark img { height: 88%; }
+.balloon-nav-wordmark:hover img { transform: rotate(-2deg) translateY(-1px); }
+
+.balloon-nav-star {
+  color: var(--pink-dark);
+  font-size: .95rem;
+  -webkit-text-stroke: 0;
+  text-shadow: none;
+  transform: translateY(-5px) rotate(8deg);
+  transition: transform .16s ease;
+}
+
+.balloon-nav-wordmark:hover .balloon-nav-star {
+  transform: translateY(-7px) rotate(18deg) scale(1.12);
+}
+
 .site-header nav {
   margin-left: auto;
   display: flex;
@@ -281,6 +311,45 @@ h1 span {
   color: var(--pink);
   -webkit-text-stroke: 2.5px var(--ink);
   text-shadow: 4px 5px 0 var(--pink-dark), 7px 8px 0 var(--ink);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.balloon-name {
+  width: min(680px, 100%);
+  margin-bottom: 26px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 0;
+}
+
+.balloon-name-row {
+  display: block;
+  height: auto;
+  filter: drop-shadow(5px 7px 0 var(--ink));
+}
+
+.balloon-name-lana {
+  width: 72%;
+  margin-left: 2%;
+  transform: rotate(.7deg);
+}
+
+.balloon-name-garcia {
+  width: 100%;
+  margin-top: -10%;
+  transform: rotate(-1deg);
 }
 
 .intro-copy > p:not(.eyebrow) {
@@ -948,11 +1017,14 @@ body.game-active #game-canvas { display: block; }
   html { scroll-padding-top: 90px; }
   .site-header { width: calc(100% - 20px); margin-top: 10px; top: 8px; gap: 10px; }
   .site-header nav { display: none; }
+  .balloon-nav-wordmark { height: 27px; }
   .game-toggle { margin-left: auto; }
   main,
   .site-footer { width: calc(100% - 20px); }
   .intro { min-height: 0; padding: 72px 8px 80px; }
   h1 { font-size: clamp(4.8rem, 24vw, 6.5rem); }
+  .balloon-name { width: min(100%, 560px); }
+  .balloon-name-row { filter: drop-shadow(3px 4px 0 var(--ink)); }
   .projects-section { padding-top: 85px; }
   .section-heading { align-items: flex-start; flex-direction: column; gap: 12px; }
   .project-folder { padding: 12px; border-radius: 0 17px 17px 17px; }
