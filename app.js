@@ -190,7 +190,7 @@ portraitViewToggle.addEventListener("click", () => {
     portraitAutoTimer = window.setTimeout(changePortraitShape, 6500);
   }
   portraitStatus.textContent = showPhoto
-    ? "photo / real"
+    ? "me"
     : `${shapeNames[portraitMode]} / 0${portraitMode + 1}`;
 });
 
