@@ -208,6 +208,117 @@ let platforms = [];
 let stars = [];
 let collected = 0;
 let previousTime = 0;
+let gameAudioContext;
+
+function getGameAudioContext() {
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContext) return null;
+
+  gameAudioContext ||= new AudioContext();
+  if (gameAudioContext.state === "suspended") {
+    gameAudioContext.resume().catch(() => {});
+  }
+  return gameAudioContext;
+}
+
+function scheduleGameTone(context, {
+  start = context.currentTime,
+  duration = 0.12,
+  frequency,
+  endFrequency = frequency,
+  type = "square",
+  volume = 0.05,
+}) {
+  const oscillator = context.createOscillator();
+  const gain = context.createGain();
+  const finish = start + duration;
+
+  oscillator.type = type;
+  oscillator.frequency.setValueAtTime(frequency, start);
+  oscillator.frequency.exponentialRampToValueAtTime(endFrequency, finish);
+
+  gain.gain.setValueAtTime(0.0001, start);
+  gain.gain.exponentialRampToValueAtTime(volume, start + 0.008);
+  gain.gain.exponentialRampToValueAtTime(0.0001, finish);
+
+  oscillator.connect(gain);
+  gain.connect(context.destination);
+  oscillator.start(start);
+  oscillator.stop(finish + 0.01);
+}
+
+function playGameSound(sound) {
+  const context = getGameAudioContext();
+  if (!context) return;
+  const now = context.currentTime;
+
+  if (sound === "jump") {
+    scheduleGameTone(context, {
+      start: now,
+      duration: 0.13,
+      frequency: 185,
+      endFrequency: 430,
+      type: "square",
+      volume: 0.045,
+    });
+    scheduleGameTone(context, {
+      start: now + 0.018,
+      duration: 0.15,
+      frequency: 280,
+      endFrequency: 620,
+      type: "triangle",
+      volume: 0.055,
+    });
+  }
+
+  if (sound === "star") {
+    scheduleGameTone(context, {
+      start: now,
+      duration: 0.065,
+      frequency: 230,
+      endFrequency: 135,
+      type: "square",
+      volume: 0.035,
+    });
+    scheduleGameTone(context, {
+      start: now + 0.035,
+      duration: 0.13,
+      frequency: 880,
+      endFrequency: 1320,
+      type: "triangle",
+      volume: 0.075,
+    });
+    scheduleGameTone(context, {
+      start: now + 0.095,
+      duration: 0.11,
+      frequency: 1320,
+      endFrequency: 1760,
+      type: "sine",
+      volume: 0.045,
+    });
+  }
+
+  if (sound === "victory") {
+    [523.25, 659.25, 783.99, 1046.5].forEach((frequency, index) => {
+      scheduleGameTone(context, {
+        start: now + index * 0.085,
+        duration: 0.24,
+        frequency,
+        endFrequency: frequency * 1.015,
+        type: index === 3 ? "square" : "triangle",
+        volume: index === 3 ? 0.06 : 0.075,
+      });
+    });
+    scheduleGameTone(context, {
+      start: now + 0.28,
+      duration: 0.42,
+      frequency: 1046.5,
+      endFrequency: 1567.98,
+      type: "sine",
+      volume: 0.065,
+    });
+  }
+}
 
 const player = {
   x: 70,
@@ -255,7 +366,7 @@ function resetGame() {
   player.vy = 0;
   player.grounded = false;
   collected = 0;
-  gameScore.textContent = "0 / 4";
+  gameScore.textContent = `0 / ${stars.length}`;
   gameMessage.textContent = "Move with A/D or ←/→. Jump with W, ↑, or Space.";
 }
 
@@ -316,6 +427,7 @@ function updateGame(delta) {
   if (keys.jump && player.grounded) {
     player.vy = -11.5;
     player.grounded = false;
+    playGameSound("jump");
   }
 
   player.vy += gravity * delta;
@@ -352,8 +464,14 @@ function updateGame(delta) {
     if (distance < 28) {
       star.collected = true;
       collected += 1;
-      gameScore.textContent = `${collected} / 4`;
-      if (collected === 4) gameMessage.textContent = "Level clear! You found every project star.";
+      gameScore.textContent = `${collected} / ${stars.length}`;
+      playGameSound("star");
+      if (collected === stars.length) {
+        gameMessage.textContent = "Level clear! You found every project star.";
+        window.setTimeout(() => {
+          if (gameActive) playGameSound("victory");
+        }, 120);
+      }
     }
   });
 }
@@ -391,6 +509,7 @@ function setGameMode(active) {
 
   cancelAnimationFrame(gameFrame);
   if (active) {
+    getGameAudioContext();
     gameToggle.blur();
     resetGame();
     previousTime = 0;
