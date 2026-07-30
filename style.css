@@ -89,15 +89,20 @@ button { color: inherit; font: inherit; }
   border: 0;
   font-weight: 700;
   font-size: .9rem;
+  text-decoration-line: underline;
   text-decoration-thickness: 2px;
   text-underline-offset: 5px;
   text-decoration-color: transparent;
   cursor: pointer;
+  transition: color .16s ease, text-decoration-color .16s ease;
 }
 .site-header nav a:hover,
 .resume-button:hover,
 .site-footer a:hover,
-.text-link:hover { text-decoration-color: var(--pink-dark); }
+.text-link:hover {
+  color: var(--pink-dark);
+  text-decoration-color: var(--pink-dark);
+}
 
 .game-toggle {
   display: inline-flex;
@@ -149,14 +154,66 @@ main,
   min-width: 0;
 }
 
-#dot-portrait {
-  display: block;
+.portrait-stage {
+  position: relative;
   width: 100%;
   max-width: 520px;
   aspect-ratio: 13 / 14;
   margin-inline: auto;
+}
+
+#dot-portrait {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
   cursor: crosshair;
   touch-action: none;
+  transition: opacity .45s ease, transform .45s ease;
+}
+
+.portrait-photo {
+  position: absolute;
+  inset: 3%;
+  width: 94%;
+  height: 94%;
+  object-fit: cover;
+  object-position: center 31%;
+  opacity: 0;
+  visibility: hidden;
+  transform: rotate(2deg) scale(.96);
+  border: var(--line);
+  border-radius: 22px;
+  box-shadow: 7px 8px 0 var(--ink);
+  transition: opacity .45s ease, transform .45s ease, visibility .45s;
+}
+
+.portrait-stage.show-photo #dot-portrait {
+  opacity: 0;
+  transform: scale(.94) rotate(-2deg);
+  pointer-events: none;
+}
+
+.portrait-stage.show-photo .portrait-photo {
+  opacity: 1;
+  visibility: visible;
+  transform: rotate(1deg) scale(1);
+}
+
+.portrait-stage.show-photo::after {
+  content: "hi! ★";
+  position: absolute;
+  top: 1%;
+  right: 3%;
+  padding: 7px 13px 5px;
+  background: var(--yellow);
+  border: 1.5px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  transform: rotate(4deg);
+  font: 600 .72rem "Pixelify Sans", monospace;
+  letter-spacing: .06em;
+  text-transform: uppercase;
 }
 
 .portrait-caption {
@@ -173,6 +230,13 @@ main,
   text-transform: uppercase;
 }
 
+.portrait-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+}
+
 .portrait-caption button {
   padding: 4px 0;
   background: transparent;
@@ -181,6 +245,20 @@ main,
   cursor: pointer;
   font: inherit;
   text-transform: uppercase;
+}
+
+.portrait-caption button:hover,
+.portrait-caption button:focus-visible {
+  color: var(--pink-dark);
+}
+
+#portrait-view-toggle {
+  color: var(--pink-dark);
+  font-weight: 700;
+}
+
+#morph-button[hidden] {
+  display: none;
 }
 
 .eyebrow {
@@ -521,7 +599,18 @@ h1 span {
   border-radius: 6px;
   font: 600 .67rem "Pixelify Sans", monospace;
 }
-.project-link { width: max-content; font-weight: 800; text-underline-offset: 5px; }
+.project-link {
+  width: max-content;
+  font-weight: 800;
+  text-underline-offset: 5px;
+  transition: color .16s ease, text-decoration-color .16s ease;
+}
+
+.project-link:hover,
+.project-link:focus-visible {
+  color: var(--pink-dark);
+  text-decoration-color: var(--pink-dark);
+}
 
 .keyboard-section {
   padding: 30px 0 110px;
@@ -777,6 +866,13 @@ kbd {
   font-weight: 800;
   font-size: .82rem;
   text-underline-offset: 4px;
+  transition: color .16s ease, text-decoration-color .16s ease;
+}
+
+.resume-actions a:hover,
+.resume-actions a:focus-visible {
+  color: var(--pink-dark);
+  text-decoration-color: var(--pink-dark);
 }
 
 body.resume-open {
