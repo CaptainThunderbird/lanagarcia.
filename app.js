@@ -1,6 +1,37 @@
 const tabs = [...document.querySelectorAll("[data-project-tab]")];
 const panels = [...document.querySelectorAll("[data-project-panel]")];
 
+let interfaceAudioContext;
+
+function playInterfaceClick(target) {
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContext) return;
+
+  interfaceAudioContext ||= new AudioContext();
+  const now = interfaceAudioContext.currentTime;
+  const oscillator = interfaceAudioContext.createOscillator();
+  const gain = interfaceAudioContext.createGain();
+  const isCloseAction = target.matches(".resume-close");
+
+  oscillator.type = "sine";
+  oscillator.frequency.setValueAtTime(isCloseAction ? 360 : 520, now);
+  oscillator.frequency.exponentialRampToValueAtTime(isCloseAction ? 250 : 390, now + 0.055);
+  gain.gain.setValueAtTime(0.035, now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+
+  oscillator.connect(gain);
+  gain.connect(interfaceAudioContext.destination);
+  oscillator.start(now);
+  oscillator.stop(now + 0.065);
+}
+
+document.addEventListener("click", (event) => {
+  if (!(event.target instanceof Element)) return;
+  const target = event.target.closest("button, a[href], #dot-portrait");
+  if (!target || target.matches(".music-key") || target.matches(":disabled")) return;
+  playInterfaceClick(target);
+});
+
 function activateProject(name, moveFocus = false) {
   tabs.forEach((tab) => {
     const active = tab.dataset.projectTab === name;
@@ -32,6 +63,8 @@ const portraitCanvas = document.querySelector("#dot-portrait");
 const portraitContext = portraitCanvas.getContext("2d");
 const morphButton = document.querySelector("#morph-button");
 const portraitStatus = document.querySelector("#portrait-status");
+const portraitStage = document.querySelector("#portrait-stage");
+const portraitViewToggle = document.querySelector("#portrait-view-toggle");
 const portraitData = "520s16f0s27c0s2810s28q0s2521016f1017c102811028q1029e1025a1805z1806n1807c180811808q1829e182a31825a1g05z1g06n1g07c1g0811g08q1g09n1g2ab1g2521o05q1o06f1o0741o07t1o08h1o0961o0a31o24d1v0521v05q1v06f1v0741v07t1v08h1v0961v09v1v0as1v24d230522305q2306f230742307t2308h230962309v230ak2313w2b04l2b05a2b05z2b06n2b07c2b0812b08q2b09e2b0a32b0b02b23o2j14d2j0522j05q2j06f2j0742j07t2j08h2j0962j09v2j0ak2j0b82j23g2r1452r04t2r05i2r0672r06w2r17k2r1892r18y2r09n2r0ab2r0b02r1bp2r23w2z04l2z05a2z05z2z06n2z17c2z1812z28q2z19e2z0a32z0as2z0bg2z23g370453704t3705i370673706w3717k372893728y3729n370ab370b0370bp3723o3e04d3e0523e05q3e06f3e1743e17t3e28h3e2963e29v3e0ak3e0b83e0383m03w3m04l3m05a3m05z3m16n3m17c3m2813m28q3m29e3m2a33m0as3m0303u03o3u04d3u0523u05q3u06f3u1743u27t3u28h3u2963u29v3u0ak3u0b83u0cd3u2384203w4204l4205a4205z4216n4217c422814228q4229e422a3420as420bg422cm422384a03w4a04l4a05a4a05z4a16n4a27c4a2814a28q4a29e4a2a34a0as4a0bp4a2304i03o4i04d4i0524i05q4i16f4i1744i17t4i28h4i2964i29v4i0ak4i0b84i0bx4i2304q03o4q04d4q0524q05q4q06f4q1744q27t4q28h4q2964q29v4q1ak4q0b84q0c54q2304y03o4y04d4y0524y05q4y16f4y1744y17t4y28h4y2964y29v4y0ak4y0b84y0bx4y22r5603g560455604t5605i561675616w5617k561895628y562a3560as560bg5602j5d0385d03w5d04l5d05a5d15z5d16n5d17c5d1815d28q5d29e5d2a35d0as5d0bg5d0c55d2305l03o5l04d5l0525l15q5l16f5l1745l17t5l18h5l1965l19v5l0ak5l0b85l0bx5l12b5t1305t03o5t04d5t0525t15q5t06f5t1745t17t5t18h5t2965t29v5t0ak5t0b85t0bx5t2da5t22b610306103o6104d610526115q6116f612746117t6128h611966129v611ak610b8610bx611cm612da6122b690306903o6904d691526915q6916f691746917t6928h692966919v690ak690b8690bx691d26921u6h02j6h0386h03w6h04l6h15a6h15z6h16n6h17c6h1816h28q6h09n6h0ab6h0b06h0bp6h0cd6h1d26h11u6p02j6p0386p03w6p04l6p15a6p15z6p16n6p17c6p1816p28q6p19e6p0a36p0as6p0bg6p0c56p0cu6p01m6w12r6w03g6w0456w14t6w25i6w1676w16w6w17k6w2896w18y6w29n6w0ab6w0b06w0bp6w0cd6w0d26w0237402r7403g740457414t7415i741677416w7417k742897418y7429n740ab741b0741bp740cd740d27402j7c0387c03w7c04l7c15a7c25z7c16n7c27c7c2817c28q7c29e7c2a37c0as7c0bg7c0c57c0cu7c0237k12r7k03g7k0457k14t7k15i7k1677k16w7k17k7k2897k28y7k29n7k0ab7k0b07k0bp7k0cd7k0d27k0237s1307s03o7s04d7s1527s15q7s16f7s1747s17t7s28h7s2967s29v7s1ak7s0b87s0bx7s0cm7s0da7s02j801388003w8014l8015a8015z8016n8017c801818028q8029e800a3800as800cd800d28001u8812r8813g880458804t8815i881678816w8807k881898828y8829n880ab880d2880238g02r8g13g8g0458g04t8g15i8g1678g16w8g17k8g1898g28y8g29n8g0ab8g01m8o02j8o1388o03w8o04l8o15a8o15z8o16n8o27c8o2818o28q8o29e8o0a38o01m8v02j8v0388v03w8v04l8v15a8v15z8v16n8v17c8v2818v28q8v29e8v0a38v01m9322b930309303o9304d930529315q9316f931749317t9328h932969309v930ak9312b9b0309b03o9b04d9b0529b15q9b16f9b0749b17t9b28h9b0969b09v9b0ak9b22j9j0389j03w9j04l9j05a9j15z9j16n9j17c9j1819j28q9j09e9j0a39j01u9r12j9r0389r03w9r04l9r05a9r15z9r16n9r07c9r1819r28q9r09e9r0a39r0as9r22b9z0309z03o9z04d9z0529z05q9z16f9z0749z07t9z28h9z0969z09v9z0ak9z11ma702ba7030a703oa704da7052a715qa716fa7174a717ta708ha7096a709va70aka711uae02jae038ae03wae04lae05aae15zae16nae17cae281ae08qae09eae0a3ae0asae12bam030am03oam04dam052am15qam06fam174am27tam08ham096am09vam0akam0bpam223au02rau03gau045au04tau05iau167au06wau07kau089au08yau09nau0abau0b0au01eb2123b202rb203gb2045b204tb215ib2167b206wb207kb2089b208yb209nb20abb20b0b20cdb221mba02bba030ba03oba04dba152ba15qba16fba074ba07tba08hba096ba09vba0akba0b8ba0cdba11mbi02bbi030bi03obi04dbi152bi05qbi16fbi074bi07tbi08hbi096bi09vbi0akbi1b8bi0bxbi0cmbi11ubq02jbq038bq03wbq04lbq15abq15zbq06nbq07cbq081bq08qbq09ebq0a3bq0bgbq0c5bq016by21uby02jby038by03wby04lby15aby15zby06nby07cby081by08qby09eby0a3by1bpby0cdby01mc602bc6130c603oc604dc6152c615qc616fc6074c607tc608hc6096c609vc60bpc61cdc601ucd02jcd038cd03wcd04lcd15acd15zcd06ncd07ccd081cd08qcd09ecd0a3cd1bpcd1cdcd023cl02rcl03gcl045cl14tcl15icl167cl06wcl07kcl089cl08ycl09ncl0bgcl22bct030ct13oct04dct152ct15qct06fct074ct07tct08hct096ct09vct12jd1138d103wd104ld115ad115zd106nd107cd1081d108qd109ed112bd9130d913od904dd9152d915qd906fd9074d907td908hd9096d902bdh130dh13odh04ddh152dh15qdh06fdh074dh07tdh08hdh096dh02jdp138dp13wdp04ldp15adp15zdp06ndp07cdp081dp08qdp09edp030dw13odw04ddw152dw15qdw06fdw074dw07tdw08hdw096dw038e413we404le415ae405ze406ne407ce4081e408qe409ee403oec04dec152ec15qec06fec074ec07tec08hec096ec0a3ec24dek152ek05qek06fek074ek07tek08hek096ek09vek24les15aes15zes06nes07ces081es08qes09ees0";
 const shapeNames = ["portrait", "orbit", "wave"];
 let portraitParticles = [];
@@ -121,9 +154,13 @@ function drawPortrait() {
 
 function changePortraitShape() {
   portraitMode = (portraitMode + 1) % shapeNames.length;
-  portraitStatus.textContent = `${shapeNames[portraitMode]} / 0${portraitMode + 1}`;
+  if (!portraitStage.classList.contains("show-photo")) {
+    portraitStatus.textContent = `${shapeNames[portraitMode]} / 0${portraitMode + 1}`;
+  }
   window.clearTimeout(portraitAutoTimer);
-  portraitAutoTimer = window.setTimeout(changePortraitShape, 6500);
+  if (!portraitStage.classList.contains("show-photo")) {
+    portraitAutoTimer = window.setTimeout(changePortraitShape, 6500);
+  }
 }
 
 function startPortrait() {
@@ -142,6 +179,20 @@ portraitCanvas.addEventListener("pointermove", (event) => {
 portraitCanvas.addEventListener("pointerleave", () => { portraitPointer.active = false; });
 portraitCanvas.addEventListener("click", changePortraitShape);
 morphButton.addEventListener("click", changePortraitShape);
+portraitViewToggle.addEventListener("click", () => {
+  const showPhoto = !portraitStage.classList.contains("show-photo");
+  portraitStage.classList.toggle("show-photo", showPhoto);
+  portraitViewToggle.setAttribute("aria-pressed", String(showPhoto));
+  portraitViewToggle.textContent = showPhoto ? "Show dots" : "Show photo";
+  morphButton.hidden = showPhoto;
+  window.clearTimeout(portraitAutoTimer);
+  if (!showPhoto) {
+    portraitAutoTimer = window.setTimeout(changePortraitShape, 6500);
+  }
+  portraitStatus.textContent = showPhoto
+    ? "photo / real"
+    : `${shapeNames[portraitMode]} / 0${portraitMode + 1}`;
+});
 
 const gameCanvas = document.querySelector("#game-canvas");
 const gameContext = gameCanvas.getContext("2d");
