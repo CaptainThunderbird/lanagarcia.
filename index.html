@@ -72,7 +72,10 @@
       <div class="section-heading">
         <div>
           <p class="eyebrow">Selected work</p>
-          <h2 id="projects-title">Projects, visually.</h2>
+          <h2 class="balloon-section-heading balloon-projects-heading" id="projects-title">
+            <span class="sr-only">Projects.</span>
+            <img src="assets/headings/projects-balloon.png" alt="" aria-hidden="true">
+          </h2>
         </div>
         <p>Choose a project to open its card. Every tab works.</p>
       </div>
@@ -86,19 +89,9 @@
         </div>
 
         <div class="project-panel" id="panel-forekast" role="tabpanel" tabindex="0" aria-labelledby="tab-forekast" data-project-panel="forekast">
-          <div class="project-visual visual-forekast" aria-label="Stylized preview of the Forekast prediction dashboard">
-            <div class="mini-window">
-              <div class="window-bar" aria-hidden="true"><i></i><i></i><i></i><span>forekast.app</span></div>
-              <div class="forecast-ui">
-                <div class="forecast-nav"><b>FOREKAST</b><span>Feed</span><span>Topics</span><em>+ Forecast</em></div>
-                <div class="forecast-card">
-                  <div><small>TECHNOLOGY · CLOSES AUG 12</small><b>Will a new AI model top the benchmark this month?</b></div>
-                  <strong>68%</strong>
-                  <div class="forecast-meter"><i></i></div>
-                  <footer><span>YES 68</span><span>NO 32</span><span>24 comments</span></footer>
-                </div>
-                <div class="forecast-mini"><span></span><span></span><span></span></div>
-              </div>
+          <div class="project-visual visual-forekast">
+            <div class="project-screenshot-frame">
+              <img class="project-screenshot is-fill" src="assets/projects/forekast.png" alt="Forekast landing page with the social forecasting message and sign-in panel">
             </div>
           </div>
           <div class="project-copy">
@@ -112,19 +105,9 @@
         </div>
 
         <div class="project-panel" id="panel-minidatadev" role="tabpanel" tabindex="0" aria-labelledby="tab-minidatadev" data-project-panel="minidatadev" hidden>
-          <div class="project-visual visual-data" aria-label="Stylized preview of the MiniDataDev analysis dashboard">
-            <div class="mini-window">
-              <div class="window-bar" aria-hidden="true"><i></i><i></i><i></i><span>mini_data_dev.py</span></div>
-              <div class="data-ui">
-                <aside><b>MiniDataDev</b><span>Upload</span><span>Datasets</span><span class="selected">Explore</span><span>Ask AI</span></aside>
-                <div class="data-main">
-                  <div class="data-title"><b>Penguins</b><span>Ask your data ✦</span></div>
-                  <div class="data-chart" aria-hidden="true">
-                    <i style="--h:36%"></i><i style="--h:68%"></i><i style="--h:47%"></i><i style="--h:84%"></i><i style="--h:58%"></i><i style="--h:73%"></i>
-                  </div>
-                  <small>Average bill length by species</small>
-                </div>
-              </div>
+          <div class="project-visual visual-data">
+            <div class="project-screenshot-frame">
+              <img class="project-screenshot is-fill" src="assets/projects/minidatadev.png" alt="MiniDataDev analysis dashboard showing dataset metrics and automatic insights">
             </div>
           </div>
           <div class="project-copy">
@@ -138,10 +121,9 @@
         </div>
 
         <div class="project-panel" id="panel-scrawlnsprawl" role="tabpanel" tabindex="0" aria-labelledby="tab-scrawlnsprawl" data-project-panel="scrawlnsprawl" hidden>
-          <div class="project-visual visual-map" aria-label="Stylized preview of the ScrawlNSprawl community map">
-            <div class="mini-window">
-              <div class="window-bar" aria-hidden="true"><i></i><i></i><i></i><span>scrawl &amp; sprawl</span></div>
-              <div class="map-ui">
+          <div class="project-visual visual-map">
+            <div class="project-screenshot-frame scrawl-composite">
+              <div class="map-ui scrawl-map" aria-hidden="true">
                 <div class="map-road road-one"></div>
                 <div class="map-road road-two"></div>
                 <div class="map-road road-three"></div>
@@ -151,6 +133,7 @@
                 <i class="map-pin pin-three">♥</i>
                 <div class="map-card"><b>Kindness spotted!</b><small>Someone left a note near Main Mall.</small></div>
               </div>
+              <img class="scrawl-sidebar" src="assets/projects/scrawlnsprawl.png" alt="ScrawlNSprawl scrapbook sidebar with recent notes and bookmarks layered over its prototype map">
             </div>
           </div>
           <div class="project-copy">
@@ -164,21 +147,9 @@
         </div>
 
         <div class="project-panel" id="panel-kuseena" role="tabpanel" tabindex="0" aria-labelledby="tab-kuseena" data-project-panel="kuseena" hidden>
-          <div class="project-visual visual-kuseena" aria-label="Stylized preview of the Kuseena recipe inventory app">
-            <div class="mini-window">
-              <div class="window-bar" aria-hidden="true"><i></i><i></i><i></i><span>Kuseena.java</span></div>
-              <div class="recipe-ui">
-                <aside><b>KUSEENA</b><span>⌂ Home</span><span class="selected">▤ Recipes</span><span>□ Pantry</span></aside>
-                <div class="recipe-main">
-                  <div class="recipe-title"><b>My recipes</b><span>+ Add</span></div>
-                  <div class="recipe-cards">
-                    <i><b>🍳</b><span>Breakfast</span></i>
-                    <i><b>🍜</b><span>Noodles</span></i>
-                    <i><b>🥭</b><span>Dessert</span></i>
-                  </div>
-                  <small>12 ingredients ready to use</small>
-                </div>
-              </div>
+          <div class="project-visual visual-kuseena">
+            <div class="project-screenshot-frame">
+              <img class="project-screenshot" src="assets/projects/kuseena.png" alt="Kuseena desktop app showing Filipino dishes, ingredients, and delivery-list controls">
             </div>
           </div>
           <div class="project-copy">
@@ -197,7 +168,10 @@
       <div class="keyboard-heading">
         <div>
           <p class="eyebrow">One last thing</p>
-          <h2 id="keyboard-title">Play something.</h2>
+          <h2 class="balloon-section-heading balloon-play-heading" id="keyboard-title">
+            <span class="sr-only">Play Something.</span>
+            <img src="assets/headings/play-something-balloon.png" alt="" aria-hidden="true">
+          </h2>
         </div>
         <p>Click the keys or use <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> <kbd>F</kbd> <kbd>J</kbd> <kbd>K</kbd> <kbd>L</kbd> <kbd>;</kbd>.</p>
       </div>
