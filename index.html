@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -22,7 +21,7 @@
 
   <header class="site-header">
     <a class="wordmark balloon-nav-wordmark" href="#home" aria-label="Lana Garcia, home">
-      <img src="balloon-lana.png" alt="" aria-hidden="true">
+      <img src="assets/headings/balloon-lana.png" alt="" aria-hidden="true">
       <span class="balloon-nav-star" aria-hidden="true">★</span>
     </a>
     <nav aria-label="Main navigation">
@@ -39,10 +38,10 @@
     <section class="intro" id="home">
       <div class="portrait-wrap">
         <div class="portrait-stage" id="portrait-stage">
-          <canvas id="dot-portrait" width="520" height="560" aria-label="An animated dot portrait of  that changes shape">
+          <canvas id="dot-portrait" width="520" height="560" aria-label="An animated dot portrait of Lana Garcia that changes shape">
             Animated dot portrait of Lana Garcia.
           </canvas>
-          <img class="portrait-photo" src="Lana.jpg" alt="Lana Garcia smiling and holding up a peace sign">
+          <img class="portrait-photo" src="assets/Lana.jpg" alt="Lana Garcia smiling and holding up a peace sign">
         </div>
         <div class="portrait-caption">
           <span id="portrait-status">portrait / 01</span>
@@ -57,8 +56,8 @@
         <p class="eyebrow">Hi, I’m</p>
         <h1 class="balloon-name">
           <span class="sr-only">Lana Garcia</span>
-          <img class="balloon-name-row balloon-name-lana" src="balloon-lana.png" alt="" aria-hidden="true">
-          <img class="balloon-name-row balloon-name-garcia" src="balloon-garcia.png" alt="" aria-hidden="true">
+          <img class="balloon-name-row balloon-name-lana" src="assets/headings/balloon-lana.png" alt="" aria-hidden="true">
+          <img class="balloon-name-row balloon-name-garcia" src="assets/headings/balloon-garcia.png" alt="" aria-hidden="true">
         </h1>
         <p>I’m a computer science student at UBC building social, data-driven, and community-focused software.</p>
         <div class="intro-actions">
@@ -107,7 +106,7 @@
         <div class="project-panel" id="panel-minidatadev" role="tabpanel" tabindex="0" aria-labelledby="tab-minidatadev" data-project-panel="minidatadev" hidden>
           <div class="project-visual visual-data">
             <div class="project-screenshot-frame">
-              <img class="project-screenshot is-fill" src="assets/projects/minidatadev.png" alt="MiniDataDev analysis dashboard showing dataset metrics and automatic insights">
+              <img class="project-screenshot is-fill is-minidatadev" src="assets/projects/minidatadev.png" alt="MiniDataDev analysis dashboard showing dataset metrics and automatic insights">
             </div>
           </div>
           <div class="project-copy">
@@ -122,8 +121,9 @@
 
         <div class="project-panel" id="panel-scrawlnsprawl" role="tabpanel" tabindex="0" aria-labelledby="tab-scrawlnsprawl" data-project-panel="scrawlnsprawl" hidden>
           <div class="project-visual visual-map">
-            <div class="project-screenshot-frame scrawl-composite">
-              <div class="map-ui scrawl-map" aria-hidden="true">
+            <div class="mini-window">
+              <div class="window-bar" aria-hidden="true"><i></i><i></i><i></i><span>scrawl &amp; sprawl</span></div>
+              <div class="map-ui" aria-label="Prototype preview of the ScrawlNSprawl community map">
                 <div class="map-road road-one"></div>
                 <div class="map-road road-two"></div>
                 <div class="map-road road-three"></div>
@@ -133,7 +133,6 @@
                 <i class="map-pin pin-three">♥</i>
                 <div class="map-card"><b>Kindness spotted!</b><small>Someone left a note near Main Mall.</small></div>
               </div>
-              <img class="scrawl-sidebar" src="assets/projects/scrawlnsprawl.png" alt="ScrawlNSprawl scrapbook sidebar with recent notes and bookmarks layered over its prototype map">
             </div>
           </div>
           <div class="project-copy">
@@ -210,19 +209,19 @@
         <button class="resume-close" id="resume-close" type="button" aria-label="Close Resume">×</button>
       </header>
       <div class="resume-viewer">
-        <iframe src="Lana_Garcia_Resume.pdf#view=FitH" title="Lana Garcia Resume PDF"></iframe>
-        <p class="resume-fallback">The PDF viewer did not load. <a href="Lana_Garcia_Resume.pdf" target="_blank" rel="noopener">Open the Resume in a new tab.</a></p>
+        <iframe src="assets/Lana_Garcia_Resume.pdf#view=FitH" title="Lana Garcia Resume PDF"></iframe>
+        <p class="resume-fallback">The PDF viewer did not load. <a href="assets/Lana_Garcia_Resume.pdf" target="_blank" rel="noopener">Open the Resume in a new tab.</a></p>
       </div>
       <div class="resume-actions">
-        <a href="Lana_Garcia_Resume.pdf" target="_blank" rel="noopener">Open in new tab ↗</a>
-        <a href="Lana_Garcia_Resume.pdf" download="Lana_Garcia_Resume.pdf">Download PDF ↓</a>
+        <a href="assets/Lana_Garcia_Resume.pdf" target="_blank" rel="noopener">Open in new tab ↗</a>
+        <a href="assets/Lana_Garcia_Resume.pdf" download="Lana_Garcia_Resume.pdf">Download PDF ↓</a>
       </div>
     </div>
   </dialog>
 
   <canvas id="game-canvas" aria-hidden="true"></canvas>
   <div class="game-hud" id="game-hud" hidden>
-    <div class="game-score"><span class="score-light"></span><b id="game-score">0 / 4</b> stars</div>
+    <div class="game-score"><span class="score-light"></span><b id="game-score">0 / 7</b> stars</div>
     <p id="game-message">Move with A/D or ←/→. Jump with W, ↑, or Space.</p>
     <button id="game-reset" type="button">Restart level</button>
     <div class="touch-controls" aria-label="Game controls">

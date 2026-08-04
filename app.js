@@ -453,29 +453,59 @@ function sizeGame() {
 function makeLevel() {
   const width = window.innerWidth;
   const height = window.innerHeight;
-  platforms = [
-    { x: 20, y: height - 58, width: Math.max(150, width * 0.2), height: 8 },
-    { x: width * 0.25, y: height - 155, width: Math.max(110, width * 0.14), height: 8 },
-    { x: width * 0.46, y: height - 245, width: Math.max(120, width * 0.16), height: 8 },
-    { x: width * 0.68, y: height - 160, width: Math.max(110, width * 0.14), height: 8 },
-    { x: width * 0.84, y: height - 250, width: Math.max(90, width * 0.12), height: 8 },
+  const useMobileLayout = width <= 480;
+  const levelSpan = Math.min(width - 40, 1340);
+  const compactHeightScale = Math.min(1, Math.max(0.72, (height - 72) / 440));
+  const desktopHeightScale = Math.min(1, Math.max(0.65, (height - 72) / 490));
+  const compactY = (offset) => height - offset * compactHeightScale;
+  const desktopY = (offset) => height - offset * desktopHeightScale;
+  const compactPlatforms = [
+    { x: 14, y: compactY(103), width: 112, height: 8 },
+    { x: width * 0.42, y: compactY(160), width: 82, height: 8 },
+    { x: width - 106, y: compactY(225), width: 90, height: 8 },
+    { x: width * 0.43, y: compactY(285), width: 80, height: 8 },
+    { x: 18, y: compactY(220), width: 84, height: 8 },
+    { x: width * 0.38, y: compactY(305), width: 82, height: 8 },
+    { x: width - 104, y: compactY(370), width: 88, height: 8 },
+    { x: width * 0.42, y: compactY(440), width: 78, height: 8 },
   ];
+  const desktopPlatforms = [
+    { x: 20, y: desktopY(58), width: Math.max(140, levelSpan * 0.13), height: 8 },
+    { x: 20 + levelSpan * 0.18, y: desktopY(145), width: 112, height: 8 },
+    { x: 20 + levelSpan * 0.37, y: desktopY(230), width: 118, height: 8 },
+    { x: 20 + levelSpan * 0.58, y: desktopY(150), width: 110, height: 8 },
+    { x: 20 + levelSpan * 0.78, y: desktopY(240), width: 105, height: 8 },
+    { x: 20 + levelSpan * 0.62, y: desktopY(325), width: 100, height: 8 },
+    { x: 20 + levelSpan * 0.44, y: desktopY(410), width: 98, height: 8 },
+    { x: 20 + levelSpan * 0.31, y: desktopY(490), width: 92, height: 8 },
+  ];
+
+  platforms = (useMobileLayout ? compactPlatforms : desktopPlatforms).map((platform) => ({
+    ...platform,
+    x: Math.max(12, Math.min(platform.x, width - platform.width - 12)),
+  }));
+  const starColors = ["#f4a4bb", "#ffd938", "#6fcf9d", "#c9b8ed"];
   stars = platforms.slice(1).map((platform, index) => ({
     x: platform.x + platform.width / 2,
     y: platform.y - 28,
     collected: false,
-    color: ["#f4a4bb", "#ffd938", "#6fcf9d", "#c9b8ed"][index],
+    color: starColors[index % starColors.length],
   }));
+}
+
+function placePlayerAtStart() {
+  const startPlatform = platforms[0];
+  player.x = startPlatform.x + 28;
+  player.y = startPlatform.y - player.height;
+  player.vx = 0;
+  player.vy = 0;
+  player.grounded = true;
 }
 
 function resetGame() {
   sizeGame();
   makeLevel();
-  player.x = 70;
-  player.y = window.innerHeight - 100;
-  player.vx = 0;
-  player.vy = 0;
-  player.grounded = false;
+  placePlayerAtStart();
   collected = 0;
   gameScore.textContent = `0 / ${stars.length}`;
   gameMessage.textContent = "Move with A/D or ←/→. Jump with W, ↑, or Space.";
@@ -563,10 +593,7 @@ function updateGame(delta) {
     player.vx = 0;
   }
   if (player.y > window.innerHeight + 70) {
-    player.x = 70;
-    player.y = window.innerHeight - 120;
-    player.vx = 0;
-    player.vy = 0;
+    placePlayerAtStart();
   }
 
   stars.forEach((star) => {
@@ -618,19 +645,19 @@ function setGameMode(active) {
   gameToggle.querySelector(".game-label").textContent = active ? "Exit game" : "Game mode";
   gameHud.hidden = !active;
 
-    cancelAnimationFrame(gameFrame);
-    if (active) {
-      getGameAudioContext();
-      playGameSound("start");
-      gameToggle.blur();
-      resetGame();
-      previousTime = 0;
-      gameFrame = requestAnimationFrame(renderGame);
-    } else {
-      playGameSound("exit");
-      gameContext.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-    }
+  cancelAnimationFrame(gameFrame);
+  if (active) {
+    getGameAudioContext();
+    playGameSound("start");
+    gameToggle.blur();
+    resetGame();
+    previousTime = 0;
+    gameFrame = requestAnimationFrame(renderGame);
+  } else {
+    playGameSound("exit");
+    gameContext.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
   }
+}
 
 gameToggle.addEventListener("click", () => setGameMode(!gameActive));
 gameReset.addEventListener("click", () => {
@@ -684,37 +711,55 @@ const keyboardStatus = document.querySelector("#keyboard-status");
 let keyboardAudioContext;
 let keyboardTimer;
 
+function schedulePianoPartial(context, {
+  start,
+  frequency,
+  duration,
+  volume,
+  type = "sine",
+}) {
+  const oscillator = context.createOscillator();
+  const gain = context.createGain();
+  const finish = start + duration;
+
+  oscillator.type = type;
+  oscillator.frequency.setValueAtTime(frequency, start);
+  gain.gain.setValueAtTime(0.0001, start);
+  gain.gain.exponentialRampToValueAtTime(volume, start + 0.012);
+  gain.gain.exponentialRampToValueAtTime(volume * 0.38, start + Math.min(0.18, duration * 0.3));
+  gain.gain.exponentialRampToValueAtTime(0.0001, finish);
+
+  oscillator.connect(gain);
+  gain.connect(context.destination);
+  oscillator.start(start);
+  oscillator.stop(finish + 0.02);
+}
+
+function playClassicalKeyboardTone(context, frequency) {
+  const start = context.currentTime;
+  [
+    { multiple: 1, duration: 1.25, volume: 0.052, type: "triangle" },
+    { multiple: 2, duration: 0.82, volume: 0.018, type: "sine" },
+    { multiple: 3, duration: 0.56, volume: 0.009, type: "sine" },
+    { multiple: 4, duration: 0.32, volume: 0.0045, type: "sine" },
+  ].forEach((partial) => {
+    schedulePianoPartial(context, {
+      start,
+      frequency: frequency * partial.multiple,
+      duration: partial.duration,
+      volume: partial.volume,
+      type: partial.type,
+    });
+  });
+}
+
 function playKeyboardNote(key, button) {
   const note = keyboardNotes[key];
   if (!note) return;
 
   keyboardAudioContext = getInterfaceAudioContext();
   if (keyboardAudioContext) {
-    const now = keyboardAudioContext.currentTime;
-    scheduleInterfaceTone(keyboardAudioContext, {
-      start: now,
-      duration: 0.28,
-      frequency: note[1],
-      endFrequency: note[1] * 0.995,
-      type: "square",
-      volume: 0.055,
-    });
-    scheduleInterfaceTone(keyboardAudioContext, {
-      start: now,
-      duration: 0.34,
-      frequency: note[1] / 2,
-      endFrequency: note[1] / 2,
-      type: "triangle",
-      volume: 0.045,
-    });
-    scheduleInterfaceTone(keyboardAudioContext, {
-      start: now + 0.075,
-      duration: 0.13,
-      frequency: note[1] * 2,
-      endFrequency: note[1] * 2.02,
-      type: "sine",
-      volume: 0.025,
-    });
+    playClassicalKeyboardTone(keyboardAudioContext, note[1]);
   }
 
   const activeKey = button || document.querySelector(`[data-key="${key}"]`);
@@ -727,7 +772,7 @@ function playKeyboardNote(key, button) {
     activeKey?.classList.remove("active");
     keyboardShell.classList.remove("playing");
     keyboardStatus.textContent = "Ready for the next note";
-  }, 280);
+  }, 650);
 }
 
 document.querySelectorAll(".music-key").forEach((button) => {
