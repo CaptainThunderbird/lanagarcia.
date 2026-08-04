@@ -3,33 +3,99 @@ const panels = [...document.querySelectorAll("[data-project-panel]")];
 
 let interfaceAudioContext;
 
-function playInterfaceClick(target) {
+function getInterfaceAudioContext() {
   const AudioContext = window.AudioContext || window.webkitAudioContext;
-  if (!AudioContext) return;
+  if (!AudioContext) return null;
 
   interfaceAudioContext ||= new AudioContext();
-  const now = interfaceAudioContext.currentTime;
-  const oscillator = interfaceAudioContext.createOscillator();
-  const gain = interfaceAudioContext.createGain();
-  const isCloseAction = target.matches(".resume-close");
+  if (interfaceAudioContext.state === "suspended") {
+    interfaceAudioContext.resume().catch(() => {});
+  }
+  return interfaceAudioContext;
+}
 
-  oscillator.type = "sine";
-  oscillator.frequency.setValueAtTime(isCloseAction ? 360 : 520, now);
-  oscillator.frequency.exponentialRampToValueAtTime(isCloseAction ? 250 : 390, now + 0.055);
-  gain.gain.setValueAtTime(0.035, now);
-  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+function scheduleInterfaceTone(context, {
+  start = context.currentTime,
+  duration = 0.08,
+  frequency = 440,
+  endFrequency = frequency,
+  type = "square",
+  volume = 0.035,
+}) {
+  const oscillator = context.createOscillator();
+  const gain = context.createGain();
+  const finish = start + duration;
+
+  oscillator.type = type;
+  oscillator.frequency.setValueAtTime(frequency, start);
+  oscillator.frequency.exponentialRampToValueAtTime(endFrequency, finish);
+  gain.gain.setValueAtTime(0.0001, start);
+  gain.gain.exponentialRampToValueAtTime(volume, start + 0.006);
+  gain.gain.exponentialRampToValueAtTime(0.0001, finish);
 
   oscillator.connect(gain);
-  gain.connect(interfaceAudioContext.destination);
-  oscillator.start(now);
-  oscillator.stop(now + 0.065);
+  gain.connect(context.destination);
+  oscillator.start(start);
+  oscillator.stop(finish + 0.01);
+}
+
+function playInterfaceSound(target) {
+  const context = getInterfaceAudioContext();
+  if (!context) return;
+  const now = context.currentTime;
+  const label = (target.textContent || target.getAttribute("aria-label") || "pixel").trim();
+  const pitchSet = [392, 440, 493.88, 523.25];
+  const pitch = pitchSet[[...label].reduce((sum, character) => sum + character.charCodeAt(0), 0) % pitchSet.length];
+  const tone = (offset, frequency, duration, type = "square", endFrequency = frequency, volume = 0.035) => {
+    scheduleInterfaceTone(context, { start: now + offset, frequency, duration, type, endFrequency, volume });
+  };
+
+  if (target.matches(".resume-close")) {
+    tone(0, 440, 0.07, "square", 330, 0.035);
+    tone(0.045, 293.66, 0.09, "triangle", 196, 0.03);
+    return;
+  }
+
+  if (target.matches("[data-project-tab]")) {
+    tone(0, 293.66, 0.055, "square", 349.23, 0.035);
+    tone(0.045, 523.25, 0.075, "triangle", 659.25, 0.04);
+    return;
+  }
+
+  if (target.matches("#dot-portrait, #morph-button")) {
+    tone(0, 180, 0.15, "sawtooth", 420, 0.025);
+    tone(0.055, 520, 0.16, "triangle", 780, 0.038);
+    return;
+  }
+
+  if (target.matches("#portrait-view-toggle")) {
+    tone(0, 659.25, 0.06, "square", 523.25, 0.03);
+    tone(0.055, 783.99, 0.085, "triangle", 1046.5, 0.035);
+    return;
+  }
+
+  if (target.matches("#resume-open")) {
+    tone(0, 261.63, 0.08, "square", 329.63, 0.032);
+    tone(0.06, 392, 0.1, "triangle", 523.25, 0.038);
+    return;
+  }
+
+  if (target.matches(".project-link, .button-primary")) {
+    tone(0, 523.25, 0.055, "square", 659.25, 0.035);
+    tone(0.05, 783.99, 0.07, "square", 1046.5, 0.04);
+    tone(0.105, 1318.51, 0.1, "triangle", 1567.98, 0.035);
+    return;
+  }
+
+  tone(0, pitch, 0.055, "square", pitch * 1.12, 0.028);
+  tone(0.038, pitch * 1.5, 0.07, "triangle", pitch * 1.25, 0.025);
 }
 
 document.addEventListener("click", (event) => {
   if (!(event.target instanceof Element)) return;
   const target = event.target.closest("button, a[href], #dot-portrait");
-  if (!target || target.matches(".music-key") || target.matches(":disabled")) return;
-  playInterfaceClick(target);
+  if (!target || target.matches(".music-key, #game-toggle, #game-reset, [data-game-control], :disabled")) return;
+  playInterfaceSound(target);
 });
 
 function activateProject(name, moveFocus = false) {
@@ -190,7 +256,7 @@ portraitViewToggle.addEventListener("click", () => {
     portraitAutoTimer = window.setTimeout(changePortraitShape, 6500);
   }
   portraitStatus.textContent = showPhoto
-    ? "me"
+    ? "photo / real"
     : `${shapeNames[portraitMode]} / 0${portraitMode + 1}`;
 });
 
@@ -295,6 +361,51 @@ function playGameSound(sound) {
       endFrequency: 1760,
       type: "sine",
       volume: 0.045,
+    });
+  }
+
+  if (sound === "start") {
+    [130.81, 196, 261.63, 392].forEach((frequency, index) => {
+      scheduleGameTone(context, {
+        start: now + index * 0.055,
+        duration: 0.12,
+        frequency,
+        endFrequency: frequency * 1.03,
+        type: index % 2 ? "triangle" : "square",
+        volume: 0.045,
+      });
+    });
+  }
+
+  if (sound === "reset") {
+    scheduleGameTone(context, {
+      start: now,
+      duration: 0.18,
+      frequency: 620,
+      endFrequency: 180,
+      type: "sawtooth",
+      volume: 0.04,
+    });
+    scheduleGameTone(context, {
+      start: now + 0.08,
+      duration: 0.11,
+      frequency: 220,
+      endFrequency: 440,
+      type: "square",
+      volume: 0.035,
+    });
+  }
+
+  if (sound === "exit") {
+    [392, 293.66, 196].forEach((frequency, index) => {
+      scheduleGameTone(context, {
+        start: now + index * 0.055,
+        duration: 0.09,
+        frequency,
+        endFrequency: frequency * 0.92,
+        type: "square",
+        volume: 0.035,
+      });
     });
   }
 
@@ -507,20 +618,25 @@ function setGameMode(active) {
   gameToggle.querySelector(".game-label").textContent = active ? "Exit game" : "Game mode";
   gameHud.hidden = !active;
 
-  cancelAnimationFrame(gameFrame);
-  if (active) {
-    getGameAudioContext();
-    gameToggle.blur();
-    resetGame();
-    previousTime = 0;
-    gameFrame = requestAnimationFrame(renderGame);
-  } else {
-    gameContext.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+    cancelAnimationFrame(gameFrame);
+    if (active) {
+      getGameAudioContext();
+      playGameSound("start");
+      gameToggle.blur();
+      resetGame();
+      previousTime = 0;
+      gameFrame = requestAnimationFrame(renderGame);
+    } else {
+      playGameSound("exit");
+      gameContext.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+    }
   }
-}
 
 gameToggle.addEventListener("click", () => setGameMode(!gameActive));
-gameReset.addEventListener("click", resetGame);
+gameReset.addEventListener("click", () => {
+  playGameSound("reset");
+  resetGame();
+});
 
 function setControl(key, pressed) {
   if (key === "a" || key === "ArrowLeft") keys.left = pressed;
@@ -572,21 +688,33 @@ function playKeyboardNote(key, button) {
   const note = keyboardNotes[key];
   if (!note) return;
 
-  const AudioContext = window.AudioContext || window.webkitAudioContext;
-  if (AudioContext) {
-    keyboardAudioContext ||= new AudioContext();
-    const oscillator = keyboardAudioContext.createOscillator();
-    const gain = keyboardAudioContext.createGain();
-
-    oscillator.type = "triangle";
-    oscillator.frequency.value = note[1];
-    gain.gain.setValueAtTime(0.13, keyboardAudioContext.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, keyboardAudioContext.currentTime + 0.42);
-
-    oscillator.connect(gain);
-    gain.connect(keyboardAudioContext.destination);
-    oscillator.start();
-    oscillator.stop(keyboardAudioContext.currentTime + 0.42);
+  keyboardAudioContext = getInterfaceAudioContext();
+  if (keyboardAudioContext) {
+    const now = keyboardAudioContext.currentTime;
+    scheduleInterfaceTone(keyboardAudioContext, {
+      start: now,
+      duration: 0.28,
+      frequency: note[1],
+      endFrequency: note[1] * 0.995,
+      type: "square",
+      volume: 0.055,
+    });
+    scheduleInterfaceTone(keyboardAudioContext, {
+      start: now,
+      duration: 0.34,
+      frequency: note[1] / 2,
+      endFrequency: note[1] / 2,
+      type: "triangle",
+      volume: 0.045,
+    });
+    scheduleInterfaceTone(keyboardAudioContext, {
+      start: now + 0.075,
+      duration: 0.13,
+      frequency: note[1] * 2,
+      endFrequency: note[1] * 2.02,
+      type: "sine",
+      volume: 0.025,
+    });
   }
 
   const activeKey = button || document.querySelector(`[data-key="${key}"]`);
