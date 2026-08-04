@@ -327,7 +327,7 @@ h1 span {
 
 .balloon-name {
   width: min(680px, 100%);
-  margin-bottom: 26px;
+  margin-bottom: 18px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -349,6 +349,7 @@ h1 span {
 .balloon-name-garcia {
   width: 100%;
   margin-top: -10%;
+  margin-bottom: -8%;
   transform: rotate(-1deg);
 }
 
@@ -382,7 +383,7 @@ h1 span {
 .projects-section { padding: 95px 0 110px; }
 
 .section-heading {
-  margin: 0 12px 46px;
+  margin: 0 12px 48px;
   display: flex;
   justify-content: space-between;
   align-items: end;
@@ -476,7 +477,7 @@ h1 span {
 
 .project-screenshot-frame {
   width: 100%;
-  height: clamp(300px, 34vw, 430px);
+  height: auto;
   overflow: hidden;
   display: grid;
   place-items: center;
@@ -487,11 +488,11 @@ h1 span {
 }
 .project-screenshot {
   width: 100%;
-  height: 100%;
+  height: auto;
   display: block;
   object-fit: contain;
+  object-position: center;
 }
-.project-screenshot.is-fill { object-fit: cover; }
 .project-screenshot.is-minidatadev { object-position: left center; }
 
 .mini-window {
