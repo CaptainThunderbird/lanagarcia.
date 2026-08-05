@@ -689,6 +689,11 @@ h1 span {
   font-size: clamp(2.7rem, 5vw, 4.5rem);
   letter-spacing: -.05em;
 }
+#panel-scrawlnsprawl .project-copy h3 {
+  max-width: 100%;
+  font-size: clamp(1.75rem, 2.5vw, 2.1rem);
+  line-height: 1.05;
+}
 .project-copy > p:not(.project-kicker) { font-size: .98rem; }
 .project-copy ul {
   list-style: none;
@@ -1074,9 +1079,7 @@ body.game-active #game-canvas { display: block; }
   .recipe-cards i { padding: 12px 2px; }
   .project-copy { min-height: 370px; padding: 45px 23px 28px; }
   #panel-scrawlnsprawl .project-copy h3 {
-    max-width: 100%;
-    font-size: clamp(1.75rem, 8.5vw, 2.25rem);
-    line-height: 1.05;
+    font-size: clamp(1.65rem, 8vw, 1.9rem);
   }
   .project-number { top: 18px; right: 18px; }
   .keyboard-section { padding-bottom: 85px; }
