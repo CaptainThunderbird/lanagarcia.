@@ -456,6 +456,8 @@ function sizeGame() {
 function makeLevel() {
   const width = window.innerWidth;
   const height = window.innerHeight;
+  const isTouchLayout = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+  const useTouchLandscape = isTouchLayout && width > height;
   const useMobileLayout = width <= 480;
   const levelSpan = Math.min(width - 40, 1340);
   const compactHeightScale = Math.min(1, Math.max(0.72, (height - 72) / 440));
@@ -463,14 +465,28 @@ function makeLevel() {
   const compactY = (offset) => height - offset * compactHeightScale;
   const desktopY = (offset) => height - offset * desktopHeightScale;
   const compactPlatforms = [
-    { x: 14, y: compactY(103), width: 112, height: 8 },
+    { x: Math.min(150, width - 124), y: compactY(103), width: 112, height: 8 },
     { x: width * 0.42, y: compactY(160), width: 82, height: 8 },
     { x: width - 106, y: compactY(225), width: 90, height: 8 },
-    { x: width * 0.43, y: compactY(285), width: 80, height: 8 },
+    { x: width * 0.55, y: compactY(285), width: 80, height: 8 },
     { x: 18, y: compactY(220), width: 84, height: 8 },
-    { x: width * 0.38, y: compactY(305), width: 82, height: 8 },
+    { x: width * 0.24, y: compactY(305), width: 82, height: 8 },
     { x: width - 104, y: compactY(370), width: 88, height: 8 },
     { x: width * 0.42, y: compactY(440), width: 78, height: 8 },
+  ];
+  const landscapeSpan = Math.min(width - 40, 1100);
+  const landscapeLeft = (width - landscapeSpan) / 2;
+  const landscapeHighY = Math.min(260, Math.max(160, height * 0.44));
+  const landscapeBand = Math.min(165, height - landscapeHighY - 48);
+  const landscapePlatforms = [
+    { x: landscapeLeft + landscapeSpan * 0.2, y: landscapeHighY + landscapeBand * 0.85, width: 112, height: 8 },
+    { x: landscapeLeft + landscapeSpan * 0.28, y: landscapeHighY + landscapeBand * 0.5, width: 88, height: 8 },
+    { x: landscapeLeft + landscapeSpan * 0.44, y: landscapeHighY + landscapeBand * 0.1, width: 90, height: 8 },
+    { x: landscapeLeft + landscapeSpan * 0.62, y: landscapeHighY + landscapeBand * 0.55, width: 84, height: 8 },
+    { x: landscapeLeft + landscapeSpan * 0.79, y: landscapeHighY + landscapeBand * 0.15, width: 88, height: 8 },
+    { x: landscapeLeft + landscapeSpan * 0.66, y: landscapeHighY + landscapeBand * 0.9, width: 86, height: 8 },
+    { x: landscapeLeft + landscapeSpan * 0.44, y: landscapeHighY + landscapeBand * 0.48, width: 82, height: 8 },
+    { x: landscapeLeft + landscapeSpan * 0.26, y: landscapeHighY + landscapeBand * 0.05, width: 80, height: 8 },
   ];
   const desktopPlatforms = [
     { x: 20, y: desktopY(58), width: Math.max(140, levelSpan * 0.13), height: 8 },
@@ -483,7 +499,11 @@ function makeLevel() {
     { x: 20 + levelSpan * 0.31, y: desktopY(490), width: 92, height: 8 },
   ];
 
-  platforms = (useMobileLayout ? compactPlatforms : desktopPlatforms).map((platform) => ({
+  const selectedPlatforms = useTouchLandscape
+    ? landscapePlatforms
+    : useMobileLayout ? compactPlatforms : desktopPlatforms;
+
+  platforms = selectedPlatforms.map((platform) => ({
     ...platform,
     x: Math.max(12, Math.min(platform.x, width - platform.width - 12)),
   }));

@@ -1144,12 +1144,6 @@ body.game-active #game-canvas { display: block; }
     outline: 4px solid var(--yellow);
     outline-offset: 4px;
   }
-  .move-pad-ring {
-    position: absolute;
-    inset: 20px;
-    border: 2px dashed rgba(255,255,255,.62);
-    border-radius: 50%;
-  }
   .move-pad-thumb {
     position: absolute;
     top: 50%;
@@ -1160,11 +1154,9 @@ body.game-active #game-canvas { display: block; }
     place-items: center;
     transform: translate(calc(-50% + var(--stick-x)), calc(-50% + var(--stick-y)));
     background: rgba(255,250,241,.94);
-    color: var(--pink-dark);
     border: 2px solid var(--ink);
     border-radius: 50%;
     box-shadow: 3px 4px 0 rgba(37,36,51,.55);
-    font-size: 1.2rem;
     transition: transform .06s linear;
   }
   .move-pad.is-dragging .move-pad-thumb { transition: none; }
