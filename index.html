@@ -224,11 +224,13 @@
     <div class="game-score"><span class="score-light"></span><b id="game-score">0 / 7</b> stars</div>
     <p id="game-message">Move with A/D or ←/→. Jump with W, ↑, or Space.</p>
     <button id="game-reset" type="button">Restart level</button>
-    <div class="touch-controls" aria-label="Game controls">
-      <button type="button" data-game-control="left" aria-label="Move left">←</button>
-      <button type="button" data-game-control="jump" aria-label="Jump">↑</button>
-      <button type="button" data-game-control="right" aria-label="Move right">→</button>
+  </div>
+  <div class="mobile-game-controls" id="mobile-game-controls" aria-label="Touch game controls" aria-hidden="true">
+    <div class="move-pad" id="move-pad" role="slider" tabindex="0" aria-label="Drag left or right to move" aria-valuemin="-100" aria-valuemax="100" aria-valuenow="0">
+      <span class="move-pad-ring" aria-hidden="true"></span>
+      <span class="move-pad-thumb" aria-hidden="true">✦</span>
     </div>
+    <button class="mobile-jump-button" type="button" data-game-control="jump" aria-label="Jump">Jump <span aria-hidden="true">↑</span></button>
   </div>
 </body>
 </html>

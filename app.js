@@ -267,7 +267,10 @@ const gameHud = document.querySelector("#game-hud");
 const gameScore = document.querySelector("#game-score");
 const gameMessage = document.querySelector("#game-message");
 const gameReset = document.querySelector("#game-reset");
+const mobileGameControls = document.querySelector("#mobile-game-controls");
+const movePad = document.querySelector("#move-pad");
 const keys = { left: false, right: false, jump: false };
+let movePointerId = null;
 let gameActive = false;
 let gameFrame;
 let platforms = [];
@@ -506,9 +509,13 @@ function resetGame() {
   sizeGame();
   makeLevel();
   placePlayerAtStart();
+  resetMovePad();
+  keys.jump = false;
   collected = 0;
   gameScore.textContent = `0 / ${stars.length}`;
-  gameMessage.textContent = "Move with A/D or ←/→. Jump with W, ↑, or Space.";
+  gameMessage.textContent = window.matchMedia("(hover: none) and (pointer: coarse)").matches
+    ? "Drag left or right to move. Tap Jump to leap."
+    : "Move with A/D or ←/→. Jump with W, ↑, or Space.";
 }
 
 function drawStar(x, y, radius, color) {
@@ -641,6 +648,7 @@ function renderGame(time = 0) {
 function setGameMode(active) {
   gameActive = active;
   document.body.classList.toggle("game-active", active);
+  mobileGameControls.setAttribute("aria-hidden", String(!active));
   gameToggle.setAttribute("aria-pressed", String(active));
   gameToggle.querySelector(".game-label").textContent = active ? "Exit game" : "Game mode";
   gameHud.hidden = !active;
@@ -654,6 +662,8 @@ function setGameMode(active) {
     previousTime = 0;
     gameFrame = requestAnimationFrame(renderGame);
   } else {
+    resetMovePad();
+    keys.jump = false;
     playGameSound("exit");
     gameContext.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
   }
@@ -670,6 +680,55 @@ function setControl(key, pressed) {
   if (key === "d" || key === "ArrowRight") keys.right = pressed;
   if (key === "w" || key === "ArrowUp" || key === " ") keys.jump = pressed;
 }
+
+function updateMovePad(event) {
+  if (event.pointerId !== movePointerId) return;
+  const rect = movePad.getBoundingClientRect();
+  const limit = rect.width * 0.31;
+  const offsetX = event.clientX - (rect.left + rect.width / 2);
+  const offsetY = event.clientY - (rect.top + rect.height / 2);
+  const distance = Math.hypot(offsetX, offsetY) || 1;
+  const scale = Math.min(1, limit / distance);
+  const stickX = offsetX * scale;
+  const stickY = offsetY * scale;
+  const deadZone = limit * 0.22;
+
+  movePad.style.setProperty("--stick-x", `${stickX}px`);
+  movePad.style.setProperty("--stick-y", `${stickY}px`);
+  movePad.setAttribute("aria-valuenow", String(Math.round((stickX / limit) * 100)));
+  keys.left = stickX < -deadZone;
+  keys.right = stickX > deadZone;
+}
+
+function resetMovePad() {
+  movePointerId = null;
+  keys.left = false;
+  keys.right = false;
+  if (!movePad) return;
+  movePad.classList.remove("is-dragging");
+  movePad.style.setProperty("--stick-x", "0px");
+  movePad.style.setProperty("--stick-y", "0px");
+  movePad.setAttribute("aria-valuenow", "0");
+}
+
+movePad.addEventListener("pointerdown", (event) => {
+  if (!gameActive || movePointerId !== null) return;
+  event.preventDefault();
+  movePointerId = event.pointerId;
+  movePad.classList.add("is-dragging");
+  movePad.setPointerCapture(event.pointerId);
+  updateMovePad(event);
+});
+movePad.addEventListener("pointermove", updateMovePad);
+movePad.addEventListener("pointerup", (event) => {
+  if (event.pointerId === movePointerId) resetMovePad();
+});
+movePad.addEventListener("pointercancel", (event) => {
+  if (event.pointerId === movePointerId) resetMovePad();
+});
+movePad.addEventListener("lostpointercapture", (event) => {
+  if (event.pointerId === movePointerId) resetMovePad();
+});
 
 window.addEventListener("keydown", (event) => {
   if (!gameActive || event.target.matches("button, a, input, textarea, select")) return;
