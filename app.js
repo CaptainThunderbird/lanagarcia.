@@ -270,6 +270,7 @@ const gameReset = document.querySelector("#game-reset");
 const mobileGameControls = document.querySelector("#mobile-game-controls");
 const movePad = document.querySelector("#move-pad");
 const keys = { left: false, right: false, jump: false };
+let jumpQueued = false;
 let movePointerId = null;
 let gameActive = false;
 let gameFrame;
@@ -458,21 +459,25 @@ function makeLevel() {
   const height = window.innerHeight;
   const isTouchLayout = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
   const useTouchLandscape = isTouchLayout && width > height;
+  const useTouchPortrait = isTouchLayout && !useTouchLandscape;
   const useMobileLayout = width <= 480;
   const levelSpan = Math.min(width - 40, 1340);
   const compactHeightScale = Math.min(1, Math.max(0.72, (height - 72) / 440));
   const desktopHeightScale = Math.min(1, Math.max(0.65, (height - 72) / 490));
   const compactY = (offset) => height - offset * compactHeightScale;
   const desktopY = (offset) => height - offset * desktopHeightScale;
+  const compactSpan = Math.min(width - 36, 520);
+  const compactLeft = (width - compactSpan) / 2;
+  const compactStartX = Math.max(150, compactLeft + compactSpan * 0.28);
   const compactPlatforms = [
-    { x: Math.min(150, width - 124), y: compactY(103), width: 112, height: 8 },
-    { x: width * 0.42, y: compactY(160), width: 82, height: 8 },
-    { x: width - 106, y: compactY(225), width: 90, height: 8 },
-    { x: width * 0.55, y: compactY(285), width: 80, height: 8 },
-    { x: 18, y: compactY(220), width: 84, height: 8 },
-    { x: width * 0.24, y: compactY(305), width: 82, height: 8 },
-    { x: width - 104, y: compactY(370), width: 88, height: 8 },
-    { x: width * 0.42, y: compactY(440), width: 78, height: 8 },
+    { x: compactStartX, y: compactY(103), width: 112, height: 8 },
+    { x: compactStartX + 65, y: compactY(160), width: 82, height: 8 },
+    { x: compactStartX + 145, y: compactY(225), width: 90, height: 8 },
+    { x: compactStartX + 75, y: compactY(285), width: 80, height: 8 },
+    { x: compactStartX - 85, y: compactY(220), width: 84, height: 8 },
+    { x: compactStartX - 20, y: compactY(305), width: 82, height: 8 },
+    { x: compactStartX + 130, y: compactY(370), width: 88, height: 8 },
+    { x: compactStartX + 55, y: compactY(440), width: 78, height: 8 },
   ];
   const landscapeSpan = Math.min(width - 40, 1100);
   const landscapeLeft = (width - landscapeSpan) / 2;
@@ -501,7 +506,7 @@ function makeLevel() {
 
   const selectedPlatforms = useTouchLandscape
     ? landscapePlatforms
-    : useMobileLayout ? compactPlatforms : desktopPlatforms;
+    : useTouchPortrait || useMobileLayout ? compactPlatforms : desktopPlatforms;
 
   platforms = selectedPlatforms.map((platform) => ({
     ...platform,
@@ -531,6 +536,7 @@ function resetGame() {
   placePlayerAtStart();
   resetMovePad();
   keys.jump = false;
+  jumpQueued = false;
   collected = 0;
   gameScore.textContent = `0 / ${stars.length}`;
   gameMessage.textContent = window.matchMedia("(hover: none) and (pointer: coarse)").matches
@@ -592,7 +598,9 @@ function updateGame(delta) {
   player.vx *= Math.pow(0.86, delta / 16.67);
   player.vx = Math.max(-6, Math.min(6, player.vx));
 
-  if (keys.jump && player.grounded) {
+  const wantsJump = keys.jump || jumpQueued;
+  jumpQueued = false;
+  if (wantsJump && player.grounded) {
     player.vy = -11.5;
     player.grounded = false;
     playGameSound("jump");
@@ -684,6 +692,7 @@ function setGameMode(active) {
   } else {
     resetMovePad();
     keys.jump = false;
+    jumpQueued = false;
     playGameSound("exit");
     gameContext.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
   }
@@ -762,7 +771,11 @@ window.addEventListener("keyup", (event) => setControl(event.key, false));
 document.querySelectorAll("[data-game-control]").forEach((button) => {
   const control = button.dataset.gameControl;
   const key = control === "left" ? "ArrowLeft" : control === "right" ? "ArrowRight" : "ArrowUp";
-  const press = (event) => { event.preventDefault(); setControl(key, true); };
+  const press = (event) => {
+    event.preventDefault();
+    if (control === "jump") jumpQueued = true;
+    setControl(key, true);
+  };
   const release = (event) => { event.preventDefault(); setControl(key, false); };
   button.addEventListener("pointerdown", press);
   button.addEventListener("pointerup", release);
